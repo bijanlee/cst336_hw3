@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Weather Service </title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;900&display=swap" rel="stylesheet">
+        <link href="css/styles.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body class="text-center">
+        
+        <div class="bg">
+            <h1 class="pt-3">Open Weather API</h1>
+            <div class="container pt-5">
+            
+            <div class="form-group text-left">
+                <label>Location:</label>
+                <input class="form-control" id="location" type="text" name="location" placeholder="Search by Zip Code, City or State" />
+                <input type="button" id="searchButton" class="btn btn-primary mt-3" value="Search" />
+                <div id="error" class="alert alert-danger mt-3" role="alert">You must enter Zip Code, City or State
+                    <button id="closeButton" type="button" class="close" aria-label="Close">
+                        <span>&times;</span>
+                    </button>
+               </div>
+            </div>
+            
+            
+            
+            <div class="card col-4" id="weatherCard">
+                <div class="card-body text-left">
+                    <div class="col-4">
+                        <img id="weatherIcon" class="card-img-top" src="..." alt="Card image cap">    
+                    </div>
+                    
+                    <h5 class="card-title">Current Weather</h5>
+                    <p id="city" class="card-text"></p>
+                    <p id="weather" class="card-text"></p>
+                    <p id="weatherDescription" class="card-text"></p>
+                    <p id="temperature" class="card-text"></p>
+                    <p id="temperatureMin" class="card-text"></p>
+                    <p id="temperatureMax" class="card-text"></p>
+                </div>
+            </div>
+            
+            </div>
+        </div>
+        
+        
+        
+        <script>
+        
+        
+            $(document).ready(function() {
+               $("#weatherCard").hide();
+               $('.alert').alert()
+               $("#error").hide();
+            });
+            
+            $("#closeButton").on('click', function() {
+                $("#error").hide();
+            })
+            
+            $("#searchButton").on('click', async function() {
+                
+                
+                
+                let search = $("#location").val();
+                if (search.length === 0) {
+                    $("#error").show();
+                    return;
+                }
+                else {
+                    
+                }
+                
+                search.replace(/\s+/g, '');
+                //let url = `https://cst336.herokuapp.com/projects/api/usernamesAPI.php?username=${username}`;
+                let url = `https://api.openweathermap.org/data/2.5/weather?q=${search}&units=imperial&APPID=92f9ef5a6d1fe9725870aa8b83e1777b`;
+                //let url = "https://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=92f9ef5a6d1fe9725870aa8b83e1777b";
+                let response = await fetch(url);
+                let data = await response.json();
+                $("#city").html(data.name);
+                $("#weather").html(data.weather[0].main);
+                $("#weatherDescription").html(data.weather[0].description);
+                $("#temperature").html("<strong>Temperature:</strong> " + data.main.temp + " degrees Farhenheit");
+                $("#temperatureMin").html("<strong>Low:</strong> " + data.main.temp_min + " degrees Farhenheit");
+                $("#temperatureMax").html("<strong>High:</strong> " + data.main.temp_max + " degrees Farhenheit");
+                
+                //$(this).attr("src", "images/card-front.jpg");
+                let imageUrl = `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+                $("#weatherIcon").attr("src", imageUrl);
+                
+                $("#weatherCard").show();
+            });
+            
+        </script>
+    </body>
+</html>
